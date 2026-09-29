@@ -1,0 +1,19 @@
+{
+  "name": "distributed-task-queue-engine",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch src/server.js",
+    "worker": "node --watch src/worker.js"
+  },
+  "author": "Ratan Yadav",
+  "license": "ISC",
+  "description": "Distributed Task Queue Engine",
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "redis": "^6.2.1"
+  }
+}
