@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import crypto from "crypto";
 
 import { connectRedis } from "./config/redis.js";
-import { addTask } from "./queue/taskQueue.js";
+import { addTask,getTaskStatus } from "./queue/taskQueue.js";
 
 dotenv.config();
 
@@ -19,6 +19,8 @@ app.post("/tasks", async (req, res) => {
         id: crypto.randomUUID(),
 
         type: req.body.type,
+
+        status: "queued",
 
         payload: req.body.payload,
 
@@ -37,6 +39,32 @@ app.get("/", (req, res) => {
     res.json({
         message: "Task Queue API is running"
     });
+});
+
+app.get("/tasks/:id", async (req, res) => {
+
+    try {
+
+        const task = await getTaskStatus(
+            req.params.id
+        );
+
+        if (!task) {
+            return res.status(404).json({
+                message: "Task not found"
+            });
+        }
+
+        res.json(task);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Failed to get task"
+        });
+    }
 });
 
 app.listen(process.env.PORT, () => {
