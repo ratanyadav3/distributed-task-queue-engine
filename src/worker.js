@@ -6,17 +6,22 @@ import { executeTask } from "./tasks/taskHandler.js";
 
 dotenv.config();
 
+const WORKER_ID = process.env.WORKER_ID || "worker-1";
+
 async function startWorker() {
     await connectRedis();
 
-    console.log("Worker started");
-    console.log("Waiting for tasks...");
+    console.log(`${WORKER_ID} started`);
+    console.log(`${WORKER_ID} waiting for tasks...`);
 
     while (true) {
 
     const task = await getTask();
 
-    console.log("Received task:", task.id);
+    console.log(
+    `${WORKER_ID} received task:`,
+    task.id
+);
 
     await updateTask(task.id, {
         status: "processing",
@@ -33,9 +38,8 @@ async function startWorker() {
         });
 
         console.log(
-            "Task completed:",
-            task.id
-        );
+        `${WORKER_ID} completed task:`,
+        task.id);
 
     } catch (error) {
 
@@ -46,7 +50,7 @@ async function startWorker() {
         });
 
         console.error(
-            "Task failed:",
+            `${WORKER_ID} task failed:`,
             task.id
         );
     }
